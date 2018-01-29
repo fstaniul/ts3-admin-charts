@@ -1,0 +1,31 @@
+{
+  "name": "ts3-admin-charts",
+  "version": "1.0.0",
+  "description": "A utility displaying teamspeak 3 administrators activity. Edit",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vip1all/ts3-admin-charts.git"
+  },
+  "keywords": [
+    "expressjs",
+    "chartjs",
+    "sqlite3",
+    "sequelizejs"
+  ],
+  "author": "Filip Staniul",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vip1all/ts3-admin-charts/issues"
+  },
+  "homepage": "https://github.com/vip1all/ts3-admin-charts#readme",
+  "dependencies": {
+    "chart.js": "^2.7.1",
+    "express": "^4.16.2",
+    "sequelize": "^4.32.2",
+    "sqlite3": "^3.1.13"
+  }
+}
