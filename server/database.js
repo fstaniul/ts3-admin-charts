@@ -53,19 +53,28 @@ function createAccounts() {
             accepted: true,
         }))
 
-    return sequelize.models.User.bulkCreate(accountRows)
-        .then(createdAccounts => {
-            console.log(`----- CREATED ACCOUNTS FROM CONFIG FILE -----`);
-            const logAccounts = createdAccounts.map(account => {
-                return {
-                    USERNAME: account.username,
-                    PASSWORD: accounts[account.username].password || accounts[account.username] || "password",
-                    ADMIN: account.administrator
-                }
-            });
-            console.table(logAccounts);
+    return sequelize.models.User.findAll()
+        .then(existingUsers => {
+            console.log('Already existing accounts in database: ')
+            console.table(existingUsers.map(user => ({
+                USERNAME: user.username,
+                ADMIN: user.administrator,
+                ACCEPTED: user.accepted
+            })));
+            return existingUsers.map(user => user.username)
         })
-        .catch(err => console.log(`Failed to create accounts, they probably exist!`));
+        .then(existingUsernames => accountRows.filter(account => !existingUsernames.includes(account.username)))
+        .then(accountsToCreate => sequelize.models.User.bulkCreate(accountsToCreate))
+        .then(createdAccounts => {
+            if (!createdAccounts || createAccounts.length === 0) return;
+            console.log('Newly created accounts from config:')
+            console.table(createdAccounts.map(acc => ({ 
+                USERNAME: acc.username, 
+                PASSWORD: accounts[acc.username].password || accounts[acc.username] || 'password',
+                ADMIN: acc.administrator,
+                ACCEPTED: acc.accepted
+            })))
+        });
 }
 
 module.exports = exports = sequelize;

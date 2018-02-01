@@ -1,7 +1,7 @@
 {
   "name": "ts3-admin-charts",
   "version": "1.0.0",
-  "description": "A utility displaying teamspeak 3 administrators activity. Edit",
+  "description": "A utility displaying teamspeak 3 administrators activity.",
   "main": "server/server.js",
   "scripts": {
     "start": "node .",
