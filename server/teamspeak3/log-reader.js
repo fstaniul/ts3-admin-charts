@@ -4,6 +4,7 @@ const { sequelize } = require('../server');
 
 const regex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\.\d{6}\|INFO    \|VirtualServer \|1  \|client \(id:(\d+)\) was added to servergroup '(.*)'\(id:(641|789)\) by client '(.*)'\(id:(\d+)\)$/;
 const datestringRegex = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
+const shortDatestringRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 const util = require('util');
 const readdir = util.promisify(fs.readdir), readFile = util.promisify(fs.readFile);
@@ -12,6 +13,12 @@ function parseDateString (dateString) {
     let re = datestringRegex.exec(dateString);
     if (!re) throw new Error('Invalid date passed to parseDateString!');
     return new Date(re[1], re[2] - 1, re[3], re[4], re[5], re[6]);
+}
+
+function parseShortDateString (dateString) {
+    let re = shortDatestringRegex.test(dateString);
+    if (!re) throw new Error('Invalid date passed to parseShortDateString!');
+    return new Date(re[1], re[2] - 1, re[3]);
 }
 
 /**

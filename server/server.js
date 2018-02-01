@@ -34,7 +34,6 @@ function initSequelizeLogging() {
 }
 
 function setupSequelize(sqlite3Error) {
-
     fs
         .readdirSync(path.join(__dirname, 'models'))
         .filter(f => /\.model\.js$/.test(f))
@@ -58,7 +57,12 @@ function setupSequelize(sqlite3Error) {
 }
 
 function setupApp() {
+    const apiRouter = require('./routes/api.route');
+
     app.use(express.static(path.join(__dirname, 'public')));
+
+    app.use('/api', apiRouter);
+
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
@@ -68,21 +72,11 @@ function setupApp() {
         else next(err);
     });
 
-    const logReader = require('./teamspeak3/log-reader');
-    logReader.extractFolder(path.join(__dirname, 'logs'))
-        .then(() => sequelize.models.Client.findAll({
-            where: {
-                registrationDate: {
-                    [Op.gt]: new Date(2018,0, 30, 0, 0, 0),
-                    [Op.lt]: new Date(2018,0, 31, 0, 0, 0)
-                }
-            },
-            include: [{model: sequelize.models.Teamspeak3Administrator, where: {databaseId: 42230}}]
-        }))
-        .then((client) => {
-            console.log(client.length);
-        })
-        // .then(() => sequelize.models.Client.findAll())
-        // .then((clients) => console.log(clients))
-        .catch((err) => console.log(err.SequelizeTimeoutError || err));
+    return new Promise((resolve, reject) => {
+        const port = process.env.PORT || config.port || 3000;
+        app.listen(port, () => {
+            console.log(`Server listening on port ${port}`);
+            resolve();
+        });
+    });
 }
