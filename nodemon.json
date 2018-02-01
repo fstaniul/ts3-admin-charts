@@ -1,4 +1,4 @@
 {
-    "verbose": false,
-    "ignore": ["test/*", "client/*", "server/logs/*", "*.log", "sqlite3.database"]
+    "verbose": true,
+    "ignore": ["server/logs/*", "*.log", "sqlite3.db*"]
 }

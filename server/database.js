@@ -33,7 +33,7 @@ function setupSequelize() {
 
     return sequelize.authenticate()
         .then(() => sequelize.sync({
-            force: !!process.env.DEBUG || !!config.DEBUG
+            // force: !!process.env.DEBUG || !!config.DEBUG
         }))
         .then(() => createAccounts())
         .catch((err) => {
@@ -65,6 +65,7 @@ function createAccounts() {
             });
             console.table(logAccounts);
         })
+        .catch(err => console.log(`Failed to create accounts, they probably exist!`));
 }
 
 module.exports = exports = sequelize;

@@ -58,7 +58,7 @@ typings/
 .env
 
 # Database created on runtime by sequelize/sqlite3
-sqlite3.database
+sqlite3.db
 
 # Do not send to git private and public key pairs!
 *.pem
