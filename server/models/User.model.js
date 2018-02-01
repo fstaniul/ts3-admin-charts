@@ -12,29 +12,44 @@ module.exports = (sequelize, datatypes) => {
             allowNull: false,
             unique: true
         },
+        administrator: {
+            type: datatypes.BOOLEAN,
+            defaultValue: false,
+        },
         password: {
             type: datatypes.STRING,
             allowNull: false,
         },
         passwordUpdatedAt: datatypes.DATE,
-    }, {
-        hooks: {
-            beforeCreate: (user) => {
-                user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync());
-                user.passwordUpdatedAt = new Date();
-                return user;
-            }
+        accepted: {
+            type: datatypes.BOOLEAN,
+            defaultValue: false,
         }
     });
 
-    User.prototype.changePassword = (password) => {
-        this.password = bcrypt.hashSync(password, bcrypt.genSaltSync());
-        this.passwordUpdatedAt = new Date();
+    User.addHook('beforeBulkCreate', 'hashAllPasswords', (users, options) => {
+        users.forEach(user => {
+            user.setDataValue('password', bcrypt.hashSync(user.getDataValue('password'), bcrypt.genSaltSync()));
+            user.setDataValue('passwordUpdatedAt', new Date());
+        });
+
+        return users;
+    });
+
+    User.addHook('beforeCreate', 'hashPassword', (user, options) => {
+        user.setDataValue('password', bcrypt.hashSync(user.getDataValue('password'), hash.genSaltSync()));
+        user.setDataValue('passwordUpdatedAt', new Date());
+        return user;
+    });
+
+    User.prototype.changePassword = function (password) {
+        this.setDataValue('password',  bcrypt.hashSync(password, bcrypt.genSaltSync()));
+        this.setDataValue('passwordUpdatedAt', new Date());
         return this;
     }
 
-    User.prototype.verifyPassword = (password) => {
-        return bcrypt.compareSync(password, this.password);
+    User.prototype.verifyPassword = function (password) {
+        return bcrypt.compareSync(password, this.getDataValue('password'));
     }
 
     return User;

@@ -1,3 +1,15 @@
 {
-    "DEBUG": true
+    "DEBUG": true,
+    "database": {
+        "accounts": {
+            "user": "password",
+            "admin": {
+                "password": "administrator_password_1234",
+                "administrator": true
+            }
+        }
+    },
+    "teamspeak": {
+        "logFolder": "C:\\Users\\filip\\Documents\\Projects\\ts3-admin-charts\\test\\logs"
+    }
 }
