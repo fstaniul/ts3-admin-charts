@@ -43,12 +43,16 @@ function setupSequelize() {
         });
 }
 
+function getPasswordFromConfig(username, accounts) {
+    return accounts[username].password || accounts[username] || "password"
+}
+
 function createAccounts() {
     const accounts = ((config || {}).database || {}).accounts || {};
     const accountRows = Object.keys(accounts)
         .map(key => ({
             username: key,
-            password: typeof accounts[key] === 'string' ? accounts[key] : accounts[key].password || "password",
+            password: getPasswordFromConfig(key, accounts),
             administrator: !!accounts[key].administrator,
             accepted: true,
         }))
@@ -61,15 +65,26 @@ function createAccounts() {
                 ADMIN: user.administrator,
                 ACCEPTED: user.accepted
             })));
-            return existingUsers.map(user => user.username)
+
+            const existingUsernames = existingUsers.map(user => user.username);
+
+            const passwordChangePromiseses = existingUsers.filter(user => !user.verifyPassword(getPasswordFromConfig(user.username, accounts)))
+                .map(user => {
+                    console.log(`Changing ${user.username} password to ${getPasswordFromConfig(user.username, accounts)}`)
+                    return user.changePassword(getPasswordFromConfig(user.username, accounts))
+                });
+
+            if (passwordChangePromiseses.length > 0)
+                return Promise.all(passwordChangePromiseses).then(() => existingUsernames);
+            else return existingUsernames;
         })
         .then(existingUsernames => accountRows.filter(account => !existingUsernames.includes(account.username)))
         .then(accountsToCreate => sequelize.models.User.bulkCreate(accountsToCreate))
         .then(createdAccounts => {
             if (!createdAccounts || createAccounts.length === 0) return;
             console.log('Newly created accounts from config:')
-            console.table(createdAccounts.map(acc => ({ 
-                USERNAME: acc.username, 
+            console.table(createdAccounts.map(acc => ({
+                USERNAME: acc.username,
                 PASSWORD: accounts[acc.username].password || accounts[acc.username] || 'password',
                 ADMIN: acc.administrator,
                 ACCEPTED: acc.accepted

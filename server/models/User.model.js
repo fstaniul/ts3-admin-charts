@@ -45,7 +45,7 @@ module.exports = (sequelize, datatypes) => {
     User.prototype.changePassword = function (password) {
         this.setDataValue('password',  bcrypt.hashSync(password, bcrypt.genSaltSync()));
         this.setDataValue('passwordUpdatedAt', new Date());
-        return this;
+        return this.save();
     }
 
     User.prototype.verifyPassword = function (password) {
