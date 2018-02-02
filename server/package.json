@@ -2,10 +2,10 @@
   "name": "ts3-admin-charts",
   "version": "1.0.0",
   "description": "A utility displaying teamspeak 3 administrators activity.",
-  "main": "server/server.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node .",
-    "watch": "SET DEBUG=true && nodemon --watch server server/server.js ",
+    "watch": "SET DEBUG=true && nodemon --watch server src/server.js ",
     "testwatch": "mocha --watch",
     "test": "mocha"
   },
