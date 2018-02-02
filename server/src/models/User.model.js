@@ -52,5 +52,12 @@ module.exports = (sequelize, datatypes) => {
         return bcrypt.compareSync(password, this.getDataValue('password'));
     }
 
+    User.prototype.safe = function () {
+        const safe = Object.assign({}, this.dataValues);
+        delete safe.password;
+        delete safe.passwordUpdatedAt;
+        return safe;
+    }
+
     return User;
 };

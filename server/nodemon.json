@@ -1,4 +1,3 @@
 {
-    "verbose": true,
-    "ignore": ["server/logs/*", "*.log", "sqlite3.db*"]
+    "verbose": true
 }

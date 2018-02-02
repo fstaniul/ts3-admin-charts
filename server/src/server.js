@@ -15,7 +15,7 @@ const sequelize = require('./database');
 sequelize.InitializedPromise.then(() => {
     const apiRouter = require('./routes/api.route');
 
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, '..', 'public')));
 
     app.post('/auth', require('body-parser').json(), require('./routes/auth.handler').auth);
     app.use('/api', apiRouter);

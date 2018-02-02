@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node .",
-    "watch": "SET DEBUG=true && nodemon --watch server src/server.js ",
+    "watch": "SET DEBUG=true && nodemon --watch src src/server.js ",
     "testwatch": "mocha --watch",
     "test": "mocha"
   },

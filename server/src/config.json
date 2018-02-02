@@ -10,6 +10,6 @@
         }
     },
     "teamspeak": {
-        "logFolder": "C:\\Users\\filip\\Documents\\Projects\\ts3-admin-charts\\test\\logs"
+        "logFolder": "C:\\Users\\filip\\Documents\\Projects\\ts3-admin-charts\\server\\test\\logs"
     }
 }
