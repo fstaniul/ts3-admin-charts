@@ -1,0 +1,25 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.login-background {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('./img/background.jpg') center;
+    background-size: cover;
+}
+
+.login-form {
+    padding: 15px;
+    background: white;
+    background: rgba(255, 255, 255, .9);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    @include media-breakpoint-up(sm) {
+        width: 500px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+    }
+}

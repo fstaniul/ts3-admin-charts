@@ -1,0 +1,28 @@
+<div class="login-background">
+    <form (ngSubmit)="onSubmit()" class="login-form border" [formGroup]="loginForm" novalidate>
+        <h3 class="text-center">Logowanie</h3>
+        <hr />
+        <div class="form-group">
+            <label for="loginform-username">Nazwa użytkownika</label>
+            <input id="loginform-username" class="form-control" type="text" formControlName="username" [ngClass]="{'is-invalid': loginForm.controls.username.invalid && (loginForm.controls.username.touched || loginForm.controls.username.dirty), 'is-valid': loginForm.controls.username.valid}">
+            <div class="invalid-feedback" *ngIf="loginForm.controls.username.invalid && (loginForm.controls.username.touched || loginForm.controls.username.dirty)">Musisz podać login.</div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error': !loginForm.valid}">
+            <label for="loginform-password">Hasło</label>
+            <input id="loginform-password" class="form-control" type="password" formControlName="password" [ngClass]="{'is-invalid': loginForm.controls.password.invalid && (loginForm.controls.password.touched || loginForm.controls.password.dirty), 'is-valid': loginForm.controls.password.valid}">
+            <div class="invalid-feedback" *ngIf="loginForm.controls.password.invalid && (loginForm.controls.password.touched || loginForm.controls.password.dirty)">Musisz podać hasło.</div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-outline-success" [disabled]="!loginForm.valid">
+                <ng-template [ngIf]="!processing">
+                    <span class="oi oi-account-login"></span>
+                    Zaloguj
+                </ng-template>
+                <ng-template [ngIf]="processing">
+                    <i class="icon icon-spin6 animate-spin"></i>
+                </ng-template>
+            </button>
+        </div>
+        <div *ngIf="errorMsg" class="invalid-feedback">{{errorMsg}}</div>
+    </form>
+</div>
