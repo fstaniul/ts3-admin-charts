@@ -1,3 +1,5 @@
+@import "../../components/header/header.component.scss";
+
 .navigation {
     padding: 10px 20px;
 }
@@ -6,7 +8,45 @@
     margin: 10px auto;
 }
 
+$admin-select-container-width: 267px;
+
 .administrator-selector-form-container {
-    width: 267px;
+    position: relative;
+    float: left;
+    width: $admin-select-container-width;
     padding: 15px;
+    height: calc(100vh - #{$header-height} - 10px);
+    background: #eee;
+}
+
+.admin-select-form {
+    label {
+        font-size: 19px;
+    }
+}
+
+.calendar-button {
+    background: white;
+    &:hover {
+        background: #6c757d
+    }
+}
+
+.show-button {
+    background: white;
+    &:hover {
+        background: #007bff;
+    }
+}
+
+.chart-container {
+    padding: 15px;
+    float: right;
+    background: #fff;
+    height: calc(100vh - #{$header-height} - 10px);
+    width: calc(100% - #{$admin-select-container-width})
+}
+
+.clear-float {
+    clear: both;
 }

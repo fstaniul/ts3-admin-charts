@@ -1,22 +1,62 @@
-<app-header></app-header>
 <div class="container-fluid">
   <div class="row height-remaining">
     <div *ngIf="loadingState === 'ERROR'" class="alert-container">
-      <ngb-alert type="danger" (close)="closeAlert()">Wystąpił błąd podczas ładowania strony! Możesz spróbowac
-        <span (click)="loadData(); closeAlert()" class="alert-link">ponownie</span>.</ngb-alert>
+      <ngb-alert type="danger" [dismissible]="false">
+        Wystąpił błąd podczas ładowania strony! Możesz spróbowac
+        <span (click)="loadData(); closeAlert()" class="alert-link">ponownie</span>
+        .
+      </ngb-alert>
     </div>
     <app-loading *ngIf="loadingState === 'LOADING'"></app-loading>
     <ng-template [ngIf]="loadingState === 'LOADED'">
       <div class="administrator-selector-form-container border-right">
-        <form>
+        <form [formGroup]="dataSelectionForm" class="admin-select-form" (ngSubmit)="onSubmit()" novalidate>
           <div class="form-group">
-            <select class="form-control form-control-lg" [formControl]="TS3AdministratorsSelectFormControl">
-              <option *ngFor="let admin of teamspeak3Administrators" [ngValue]="admin">{{admin.nickname}}</option>
-          </select>
+            <label for="admin-select" class="special-font text-primary">Administrator:</label>
+            <select id="admin-select" class="form-control form-control-lg" formControlName="id">
+              <option *ngFor="let admin of teamspeak3Administrators" [ngValue]="admin.databaseId">{{admin.nickname}}</option>
+            </select>
           </div>
+          <div class="form-group">
+            <label for="date-from" class="special-font text-primary">Od daty:</label>
+            <div class="input-group">
+              <input id="date-from" type="text" class="form-control" formControlName="from" ngbDatepicker placeholder="yyyy-mm-dd" #fromNgbDp="ngbDatepicker"
+                [ngClass]="getInputErrorClasses('from')">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar-button" (click)="toNgbDp.close(); fromNgbDp.toggle();" type="button">
+                  <span class="oi oi-calendar"></span>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="shouldShowError('from')">Musisz wybrać date!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="date-to" class="special-font text-primary">Do daty:</label>
+            <div class="input-group">
+              <input id="date-to" type="text" class="form-control" formControlName="to" ngbDatepicker placeholder="yyyy-mm-dd" #toNgbDp="ngbDatepicker"
+                [ngClass]="getInputErrorClasses('to')">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar-button" (click)="fromNgbDp.close(); toNgbDp.toggle();" type="button">
+                  <span class="oi oi-calendar"></span>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="shouldShowError('to')">Musisz wybrać date!</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-lg btn-outline-primary btn-block show-button">
+            Pokaż
+          </button>
         </form>
-        <app-graph [admin]="selectedTS3Administrator"></app-graph>
+        <hr>
+        <label for="chart-type-selector" class="special-font text-primary">Typ wykresu:</label>        
+        <select id="chart-type-selector" [formControl]="chartTypeSelectFormControl" class="form-control">
+          <option *ngFor="let chart of chartTypes" [ngValue]="chart.type">{{chart.name}}</option>
+        </select>
       </div>
+      <div class="chart-container">
+        <canvas #canvas width="500" height="500" id="chart"></canvas>
+      </div>
+      <div class="clear-float"></div>
     </ng-template>
   </div>
 </div>

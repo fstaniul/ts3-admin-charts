@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['graphs']);
+      this.router.navigate(['panel', 'graphs']);
     }
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -37,6 +37,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.loginForm.invalid) {
+      Object.keys(this.loginForm.controls).map(key => this.loginForm.controls[key]).forEach(control => control.markAsDirty());
+      return;
+    }
+
     this.loginForm.disable();
     this.processing = true;
     this.closeErrorAlert();
@@ -49,7 +54,7 @@ export class LoginComponent implements OnInit {
 
     const successHandler = ((data) => {
       this.authService.login(data);
-      this.router.navigate(['graphs']);
+      this.router.navigate(['panel', 'graphs']);
       allwaysHandler();
     }).bind(this);
 
@@ -60,6 +65,11 @@ export class LoginComponent implements OnInit {
 
     this.apiService.postAuth(this.loginForm.value)
       .subscribe(successHandler, errorHandler);
+  }
+
+  shouldShowError(controlName: string): boolean {
+    const control = this.loginForm.controls[controlName];
+    return control.invalid && (control.touched || control.dirty);
   }
 
   closeErrorAlert(): void {

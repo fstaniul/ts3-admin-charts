@@ -1,0 +1,17 @@
+<app-back-link link="graphs" text="Wykresy"></app-back-link>
+<div class="display">
+  <form novalidate>
+    <div class="form-group form-row">
+      <label for="staticUsername" class="col-xs-6 col-form-label">Login: </label>
+      <div class="col-xs-6">
+        <input type="text" readonly class="form-control-plaintext" id="staticUsername" [value]="loggedInUser?.username">
+      </div>
+    </div>
+    <div class="form-group form-row">
+      <label class="col-xs-6 col-form-label">Hasło: </label>
+      <div class="col-xs-6">
+        <button class="btn btn-danger"><span class="oi oi-key"></span> Zmien hasło</button>
+      </div>
+    </div>
+  </form>
+</div>

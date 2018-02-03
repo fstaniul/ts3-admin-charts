@@ -1,33 +1,46 @@
+import { Router } from '@angular/router';
+import { ApiService } from './../api.service';
 import { UserData } from './auth.service';
 import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-const userData = {
-  user: {
-    uuid: 'very-long-uuid-string',
-    username: 'Filipo',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  token: 'very-long-secret-token'
-};
-
 @Injectable()
 export class AuthService implements OnDestroy {
-  subject: BehaviorSubject<UserData>;
+  private loggedInUser: User;
+  private subject: BehaviorSubject<UserData>;
 
-  constructor() {
-    this.subject = new BehaviorSubject<UserData>(userData);
+  constructor(private apiService: ApiService, private router: Router) {
+    this.subject = new BehaviorSubject<UserData>(undefined);
+    const token = localStorage.getItem('token');
+    if (token) {
+      const successHandler = data => {
+        this.loggedInUser = data.user;
+        this.subject.next(data);
+        localStorage.setItem('token', data.token);
+      };
+
+      const errorHandler = data => {
+        localStorage.removeItem('token');
+        this.loggedInUser = undefined;
+        this.subject.next(undefined);
+        this.router.navigate(['login']);
+      };
+
+      this.apiService.validateToken(token)
+        .subscribe(successHandler, errorHandler);
+    }
   }
 
   login(data: UserData) {
     localStorage.setItem('token', data.token);
+    this.loggedInUser = data.user;
     this.subject.next(data);
   }
 
   logout() {
     localStorage.removeItem('token');
+    this.loggedInUser = undefined;
     this.subject.next(undefined);
   }
 
@@ -35,12 +48,16 @@ export class AuthService implements OnDestroy {
     return localStorage.getItem('token');
   }
 
-  getData(): Observable<UserData> {
+  subscribeToData(): Observable<UserData> {
     return this.subject.asObservable();
   }
 
   isLoggedIn() {
     return !!localStorage.getItem('token');
+  }
+
+  getLoggedInUser(): User {
+    return this.loggedInUser;
   }
 
   ngOnDestroy(): void {
@@ -53,6 +70,8 @@ export interface IUser {
   username: string;
   updatedAt: Date;
   createdAt: Date;
+  administrator: boolean;
+  accepted: boolean;
 }
 
 export interface IUserData {

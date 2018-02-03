@@ -1,0 +1,27 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+.signup-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('./img/signup-background.jpg') center;
+    background-size: cover;
+}
+
+.signup-form {
+    @media (min-height: 500px) {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+        @include media-breakpoint-up(sm) {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            border-radius: 15px;
+        }
+    }
+    padding: 15px;
+    background: white;
+    background: rgba(255,255,255,0.9);
+}

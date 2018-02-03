@@ -1,8 +1,15 @@
 <header class="border-bottom header-container">
-  <img class="logo" src="/assets/logo.png" alt="electronicsports.pl logo" />
+  <a routerLink="graphs" class="logo-link d-none d-md-block">
+    <img class="logo" src="/assets/logo.png" alt="electronicsports.pl logo" />
+  </a>
   <ul class="nav justify-content-end">
     <li class="nav-item">
-      <a class="nav-link">Zalogowany jako <a routerLink="/profile" class="profile-link">{{loggedInUser.username}}</a></a>
+      <a class="nav-link">Zalogowany jako
+        <a routerLink="profile" class="profile-link">{{loggedInUser ? loggedInUser.username : '...'}}</a>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link admin-link" [ngClass]="{disabled: !loggedInUser?.administrator}" (click)="navigateToAdminPanel()">Panel Administratora</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/" (click)="callLogout()">Wyloguj</a>

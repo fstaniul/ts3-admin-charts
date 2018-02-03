@@ -1,0 +1,53 @@
+<div class="signup-container">
+  <form class="signup-form border" [formGroup]="signupForm" novalidate (ngSubmit)="onSubmit()">
+    <h2 class="text-primary special-font text-center">Zarejestruj się!</h2>
+    <hr>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <span class="oi oi-person"></span>
+          </span>
+        </div>
+        <input type="text" class="form-control" placeholder="login" formControlName="username" [ngClass]="setClasses('username')">
+        <div class="invalid-feedback">
+          Musisz podać login!
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <span class="oi oi-key"></span>
+          </span>
+        </div>
+        <input type="password" class="form-control" placeholder="hasło" [ngClass]="setClasses('password')" formControlName="password">
+        <div class="invalid-feedback" *ngIf="shouldShowError('password')">
+          Musisz wpisać hasło!
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <span class="oi oi-key"></span>
+          </span>
+        </div>
+        <input type="password" class="form-control" placeholder="powtórz hasło" [ngClass]="setClasses('passwordRepeat')" formControlName="passwordRepeat">
+        <div class="invalid-feedback" *ngIf="shouldShowError('passwordRepeat')">
+          {{signupForm.controls.passwordRepeat.errors.required ? 'Musisz potwierdzić hasło!' : 'Hasła muszą być identyczne!'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <button type="submit" class="btn btn-primary btn-block">Zarejestruj</button>
+      </div>
+      <div class="col">
+        <a routerLink="/login" class="btn btn-outline-secondary btn-block">Powróć do logowania</a>
+      </div>
+    </div>
+  </form>
+</div>

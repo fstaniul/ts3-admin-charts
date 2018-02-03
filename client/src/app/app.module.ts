@@ -1,3 +1,4 @@
+import { LoggedInGuard } from './services/guards/logged-in.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -16,11 +17,23 @@ import { GraphsComponent } from './routes/graphs/graphs.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ApiService } from './api.service';
-import { GraphComponent } from './components/graph/graph.component';
+import { SignupComponent } from './routes/signup/signup.component';
+import { LoggedInAsAdminGuard } from './services/guards/logged-in-as-admin.guard';
+import { ProfileComponent } from './routes/profile/profile.component';
+import { PanelComponent } from './routes/panel/panel.component';
+import { BackLinkComponent } from './components/back-link/back-link.component';
 
 const appRoutes: Routes = [
-  { path: 'graphs', component: GraphsComponent },
+  {
+    path: 'panel', component: PanelComponent, canActivate: [LoggedInGuard], children: [
+      { path: 'graphs', component: GraphsComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'admin', component: AdminComponent, canActivate: [LoggedInAsAdminGuard] },
+      { path: '', redirectTo: 'graphs', pathMatch: 'full'}
+    ]
+  },
   { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
   { path: '**', redirectTo: 'login' }
 ];
 
@@ -32,7 +45,10 @@ const appRoutes: Routes = [
     GraphsComponent,
     HeaderComponent,
     LoadingComponent,
-    GraphComponent
+    SignupComponent,
+    ProfileComponent,
+    PanelComponent,
+    BackLinkComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -42,7 +58,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     NgbModule.forRoot(),
   ],
-  providers: [ApiService, AuthService, AuthHttpInterceptorProvider, JsonHttpInterceptorProvider],
+  providers: [ApiService, AuthService, AuthHttpInterceptorProvider, JsonHttpInterceptorProvider, LoggedInGuard, LoggedInAsAdminGuard],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
