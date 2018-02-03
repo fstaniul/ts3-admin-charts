@@ -13,9 +13,14 @@
         <form [formGroup]="dataSelectionForm" class="admin-select-form" (ngSubmit)="onSubmit()" novalidate>
           <div class="form-group">
             <label for="admin-select" class="special-font text-primary">Administrator:</label>
-            <select id="admin-select" class="form-control form-control-lg" formControlName="id">
-              <option *ngFor="let admin of teamspeak3Administrators" [ngValue]="admin.databaseId">{{admin.nickname}}</option>
-            </select>
+            <div class="form-check" *ngFor="let control of dataSelectionForm.controls.ids.controls">
+              <input [id]="'checkbox-' + teamspeak3Administrators[dataSelectionForm.controls.ids.controls.indexOf(control)].databaseId"
+                type="checkbox" class="form-check-input" [value]="teamspeak3Administrators[dataSelectionForm.controls.ids.controls.indexOf(control)].databaseId"
+                [formControl]="control">
+              <label [for]="'checkbox-' + teamspeak3Administrators[dataSelectionForm.controls.ids.controls.indexOf(control)].databaseId"
+                class="form-check-label">{{teamspeak3Administrators[dataSelectionForm.controls.ids.controls.indexOf(control)].nickname}}</label>
+            </div>
+            <div *ngIf="shouldShowError('ids')" class="select-admins-feedback">Musisz wybrać przynajmniej jednego administratora!</div>
           </div>
           <div class="form-group">
             <label for="date-from" class="special-font text-primary">Od daty:</label>
@@ -48,7 +53,7 @@
           </button>
         </form>
         <hr>
-        <label for="chart-type-selector" class="special-font text-primary">Typ wykresu:</label>        
+        <label for="chart-type-selector" class="special-font text-primary">Typ wykresu:</label>
         <select id="chart-type-selector" [formControl]="chartTypeSelectFormControl" class="form-control">
           <option *ngFor="let chart of chartTypes" [ngValue]="chart.type">{{chart.name}}</option>
         </select>

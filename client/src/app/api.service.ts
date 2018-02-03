@@ -47,20 +47,25 @@ export class ApiService {
     return `${date.year}-${month}-${day}`;
   }
 
-  getReg(data: RegRequest): Observable<RegResponse> {
+  getReg(data: RegRequest): Observable<RegData> {
+    const id = data.ids.join('+');
     const from = this.parseDateObject(data.from);
     const to = this.parseDateObject(data.to);
-    // return this.http.get<RegResponse>(`/api/reg/${data.id}`, {params: {from, to}});
+    // return this.http.get<RegData>(`/api/reg`, {params: {ids, from, to}});
 
-    // console.log({from, to});
+    console.log(data);
 
-    return Observable.of({data: [
-      {date: new Date(), count: 10},
-      {date: new Date(2018, 1, 2), count: 5},
-      {date: new Date(2018, 1, 3), count: 3},
-      {date: new Date(2018, 0, 30), count: 15},
-      {date: new Date(2018, 1, 1), count: 7},
-    ]}).delay(1000);
+    return Observable.of({
+      labels: ['2018-01-26', '2018-01-27', '2018-01-28', '2018-01-29', '2018-01-30'],
+      data: [
+        {label: 'Zarejestrowani przez filipo!', count: [1, 3, 7, 4, 3, 6]},
+        {label: 'Zarejestrowani przez parwacia!', count: [3, 4, 9, 12, 4]},
+        {label: 'Zarejestrowani przez kropaik!', count: [3, 12, 5, 6, 3]},
+        {label: 'Zarejestrowani przez xd!', count: [3, 3, 4, 1, 4]},
+        {label: 'Zarejestrowani przez virus!', count: [3, 22, 0, 12, 7]},
+        {label: 'Zarejestrowani przez cos!', count: [3, 17, 10, 2, 4]},
+      ]
+    }).delay(1000);
   }
 
   validateToken(token): Observable<AuthResponse> {
@@ -91,8 +96,11 @@ export interface SignupRequest {
 }
 
 export interface RegData {
-  date: Date;
-  count: number;
+  labels: string[];
+  data: {
+    label: string;
+    count: number[];
+  }[];
 }
 
 export interface DateObject {
@@ -102,13 +110,9 @@ export interface DateObject {
 }
 
 export interface RegRequest {
-  id: number;
+  ids: number[];
   from: DateObject;
   to: DateObject;
-}
-
-export interface RegResponse {
-  data: RegData[];
 }
 
 export interface TS3Administrator {
