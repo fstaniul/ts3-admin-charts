@@ -1,8 +1,8 @@
 <div class="login-background">
     <div class="login-signup-text">
-        <span class="d-none d-sm-block">Jeżeli nie masz jeszcz konta to </span>
+        <span class="d-none d-sm-inline-block">Jeżeli nie masz jeszcz konta to </span>
         <a routerLink="/singup">zarejestruj się</a>
-        <span class="d-none d-sm-block"> !</span>
+        <span class="d-none d-sm-inline-block"> !</span>
     </div>
     <form (ngSubmit)="onSubmit()" class="login-form border" [formGroup]="loginForm" novalidate>
         <h3 class="text-center">Logowanie</h3>
@@ -28,6 +28,6 @@
                 </ng-template>
             </button>
         </div>
-        <div *ngIf="errorMsg" class="invalid-feedback">{{errorMsg}}</div>
+        <ngb-alert *ngIf="showErrorAlert" type='danger' (close)="closeErrorAlert()">Podane hasło jest niepoprawne lub konto nie zostało aktywowane.</ngb-alert>
     </form>
 </div>

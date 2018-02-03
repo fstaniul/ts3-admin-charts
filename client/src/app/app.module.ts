@@ -12,8 +12,14 @@ import { JsonHttpInterceptorProvider } from './services/http-interceptors/json.i
 import { AppComponent } from './app.component';
 import { LoginComponent } from './routes/login/login.component';
 import { AdminComponent } from './routes/admin/admin.component';
+import { GraphsComponent } from './routes/graphs/graphs.component';
+import { HeaderComponent } from './components/header/header.component';
+import { LoadingComponent } from './components/loading/loading.component';
+import { ApiService } from './api.service';
+import { GraphComponent } from './components/graph/graph.component';
 
 const appRoutes: Routes = [
+  { path: 'graphs', component: GraphsComponent },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'login' }
 ];
@@ -22,7 +28,11 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    AdminComponent
+    AdminComponent,
+    GraphsComponent,
+    HeaderComponent,
+    LoadingComponent,
+    GraphComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -32,7 +42,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     NgbModule.forRoot(),
   ],
-  providers: [AuthService, AuthHttpInterceptorProvider, JsonHttpInterceptorProvider],
+  providers: [ApiService, AuthService, AuthHttpInterceptorProvider, JsonHttpInterceptorProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

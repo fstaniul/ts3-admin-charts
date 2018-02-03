@@ -1,2 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import "open-iconic-bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Lato|Patrick+Hand+SC&subset=latin-ext');
+
+* {
+    font-family: 'Lato', sans-serif
+}
+
+.special-font {
+    font-family: 'Patrick Hand SC', cursive;
+}
+
+.alert-link {
+    &:hover {
+        cursor: pointer;
+    }
+}

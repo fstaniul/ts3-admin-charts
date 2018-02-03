@@ -1,5 +1,7 @@
+import { ApiService } from './../../api.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
@@ -14,12 +16,20 @@ import { Observable } from 'rxjs/Observable';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  errorMsg = '';
   processing = false;
+  showErrorAlert = false;
 
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private authService: AuthService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['graphs']);
+    }
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -29,7 +39,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.loginForm.disable();
     this.processing = true;
-    this.errorMsg = undefined;
+    this.closeErrorAlert();
 
     const allwaysHandler = (() => {
       this.processing = false;
@@ -39,15 +49,21 @@ export class LoginComponent implements OnInit {
 
     const successHandler = ((data) => {
       this.authService.login(data);
+      this.router.navigate(['graphs']);
       allwaysHandler();
     }).bind(this);
 
     const errorHandler = ((err) => {
       allwaysHandler();
+      this.showErrorAlert = true;
     }).bind(this);
 
-    this.http.post<AuthPost>('/auth', this.loginForm.value)
+    this.apiService.postAuth(this.loginForm.value)
       .subscribe(successHandler, errorHandler);
+  }
+
+  closeErrorAlert(): void {
+    this.showErrorAlert = false;
   }
 }
 

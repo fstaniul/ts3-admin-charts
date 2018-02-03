@@ -1,0 +1,22 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row height-remaining">
+    <div *ngIf="loadingState === 'ERROR'" class="alert-container">
+      <ngb-alert type="danger" (close)="closeAlert()">Wystąpił błąd podczas ładowania strony! Możesz spróbowac
+        <span (click)="loadData(); closeAlert()" class="alert-link">ponownie</span>.</ngb-alert>
+    </div>
+    <app-loading *ngIf="loadingState === 'LOADING'"></app-loading>
+    <ng-template [ngIf]="loadingState === 'LOADED'">
+      <div class="administrator-selector-form-container border-right">
+        <form>
+          <div class="form-group">
+            <select class="form-control form-control-lg" [formControl]="TS3AdministratorsSelectFormControl">
+              <option *ngFor="let admin of teamspeak3Administrators" [ngValue]="admin">{{admin.nickname}}</option>
+          </select>
+          </div>
+        </form>
+        <app-graph [admin]="selectedTS3Administrator"></app-graph>
+      </div>
+    </ng-template>
+  </div>
+</div>

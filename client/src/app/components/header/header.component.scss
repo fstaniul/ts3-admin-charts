@@ -1,0 +1,22 @@
+.header-container {
+    margin-top: 10px;
+    padding: 10px 30px;
+    width: 100vw;
+    position: relative;
+    height: 121px;
+
+    & ul {
+        margin-top: 25px;
+    }
+}
+
+.logo {
+    position: absolute;
+    height: 100px;
+}
+
+.profile-link {
+    &:hover {
+        text-decoration: none !important;
+    }
+}
