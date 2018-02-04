@@ -1,0 +1,22 @@
+{
+    "port": 3000,
+    "database": {
+        "accounts": {
+            "admin": {
+                "password": "",
+                "administrator": true
+            }
+        }
+    },
+    "teamspeak": {
+        "logFolder": "",
+        "connection": {
+            "host": "localhost",
+            "port": 10011,
+            "login": "",
+            "password": "",
+            "serverId": 1
+        },
+        "adminGroups": [{"id": 1, "limit": 1}, 1]
+    }
+}

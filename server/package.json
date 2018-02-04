@@ -35,6 +35,7 @@
     "netlinkwrapper": "^1.0.0",
     "node-schedule": "^1.3.0",
     "sequelize": "^4.32.2",
+    "socket.io": "^2.0.4",
     "sqlite3": "^3.1.13"
   },
   "devDependencies": {

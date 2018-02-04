@@ -19,6 +19,8 @@ function parseDatestring(datestring) {
     return /^\d{4}-\d{2}-\d{2}$/.test(datestring) ? new Date(`${datestring}T00:00:00.000+01:00`) : null;
 }
 
+const __server = require('../server');
+
 router.route('/users')
     .get(authHandler.verify,
     authHandler.isAdmin,
@@ -39,7 +41,12 @@ router.route('/users')
                     res.sendStatus(300);
                     return;
                 }
-                else res.json(user.safe());
+                else {
+                    res.json(user.safe());
+
+                    const io = __server.io;
+                    io.emit('users-new', user.safe());
+                }
             });
     })
     .patch(authHandler.verify,
@@ -61,7 +68,12 @@ router.route('/users')
                     user.administrator = !!administrator;
                 }
 
-                user.save().then(user => res.json(user.safe()));
+                user.save().then(user => {
+                    res.json(user.safe())
+                    
+                    const io = __server.io;
+                    io.emit('users-update', user.safe());
+                });
             });
     });
 
@@ -94,7 +106,11 @@ router.route('/users/:id')
         if (!uuid) res.sendStatus(400);
         else {
             sequelize.models.User.destroy({ where: { uuid } })
-                .then((count) => res.json({ deleted: count, success: count > 0 }));
+                .then((count) => {
+                    res.json({ deleted: count, success: count > 0 })
+                    const io = __server.io;
+                    io.emit('users-deleted', {uuid: uuid});
+                });
         }
     }
     );
