@@ -2,6 +2,8 @@ require('console.table');
 const fs = require('fs');
 const path = require('path');
 
+const bodyParser = require('body-parser');
+
 const config = require('./config.json');
 const logReader = require('./teamspeak3/log-reader');
 
@@ -14,14 +16,17 @@ const sequelize = require('./database');
 
 sequelize.InitializedPromise.then(() => {
     const apiRouter = require('./routes/api.route');
+    const authHandler = require('./routes/auth.handler');
+    const validateTokenHandler = require('./routes/validate.handler.js');
 
     app.use(express.static(path.join(__dirname, '..', 'public')));
 
-    app.post('/auth', require('body-parser').json(), require('./routes/auth.handler').auth);
+    app.post('/auth', bodyParser.json(), authHandler.auth);
+    app.get('/validate', validateTokenHandler);
     app.use('/api', apiRouter);
 
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+        res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
     });
     app.use((err, req, res, next) => {
         if (err == 404 || err.code == 404 || err.responseCode == 404)
@@ -30,12 +35,32 @@ sequelize.InitializedPromise.then(() => {
     });
 
     return logReader.extractFolder(config.teamspeak.logFolder)
-        .then(() => console.log(`Data from logs saved in the database!`))
+        .then(() => console.log(`Data from logs saved in the database!\n`))
         .then(() => new Promise((resolve, reject) => {
             const port = process.env.PORT || config.port || 3000;
             app.listen(port, () => {
-                console.log(`Server listening on port ${port}`);
+                console.log(`Server listening on port ${port}\n`);
                 resolve();
             });
         }));
+})
+.then(() => {
+    const timeoutTime = new Date(Date.now() + 86400000);
+    timeoutTime.setHours(0, 0, 0, 0);
+    const timeoutMillis = timeoutTime.getTime() - Date.now();
+    console.log (`Next log reading planned for: ${timeoutTime.toISOString()}. It will be executed in approximately ${timeoutMillis}ms\n`);
+    setTimeout(() => setupLogReaderInterval(), timeoutMillis);
 });
+
+
+function setupLogReaderInterval () {
+    setInterval(() => {
+        logReader.extractFolder(config.teamspeak.logFolder)
+            .then(() => console.log(`${timeAsString()} :: Data from logs saved in the database!`));
+    }, 86400000)
+}
+
+function timeAsString () {
+    const date = new Date();
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+}

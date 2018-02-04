@@ -37,7 +37,7 @@ module.exports = (sequelize, datatypes) => {
     });
 
     User.addHook('beforeCreate', 'hashPassword', (user, options) => {
-        user.setDataValue('password', bcrypt.hashSync(user.getDataValue('password'), hash.genSaltSync()));
+        user.setDataValue('password', bcrypt.hashSync(user.getDataValue('password'), bcrypt.genSaltSync()));
         user.setDataValue('passwordUpdatedAt', new Date());
         return user;
     });

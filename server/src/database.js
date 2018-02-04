@@ -5,16 +5,13 @@ const config = require('./config.json');
 const sequelize = new Sequelize({
     database: 'ts3_admin_charts',
     dialect: 'sqlite',
-    storage: 'sqlite3.db',
+    storage: path.join(__dirname, 'sqlite3.db'),
     operatorsAliases: false,
-    logging: initSequelizeLogging(),
-    define: {
-        timestamps: false,
-    }
+    logging: initSequelizeLogging()
 });
 
 function initSequelizeLogging() {
-    const pathToLogFolder = path.join(__dirname, config.logFolder || 'logs');
+    const pathToLogFolder = path.join(__dirname, '..', config.logFolder || 'logs');
     if (!fs.existsSync(pathToLogFolder)) fs.mkdirSync(pathToLogFolder);
     const writeStream = fs.createWriteStream(path.join(pathToLogFolder, 'sequelize.log'));
     return (data, options) => writeStream.write(`${data}\n`);
@@ -58,7 +55,10 @@ function createAccounts() {
         }))
 
     return sequelize.models.User.findAll()
+        // .then((x) => console.log(x) || x)
         .then(existingUsers => {
+            if (!existingUsers || existingUsers.length < 1) return [];
+
             console.log('Already existing accounts in database: ')
             console.table(existingUsers.map(user => ({
                 USERNAME: user.username,
@@ -68,7 +68,9 @@ function createAccounts() {
 
             const existingUsernames = existingUsers.map(user => user.username);
 
-            const passwordChangePromiseses = existingUsers.filter(user => !user.verifyPassword(getPasswordFromConfig(user.username, accounts)))
+            const passwordChangePromiseses = existingUsers
+            .filter(user => !!accounts[user.username])
+            .filter(user => !user.verifyPassword(getPasswordFromConfig(user.username, accounts)))
                 .map(user => {
                     console.log(`Changing ${user.username} password to ${getPasswordFromConfig(user.username, accounts)}`)
                     return user.changePassword(getPasswordFromConfig(user.username, accounts))
@@ -78,10 +80,13 @@ function createAccounts() {
                 return Promise.all(passwordChangePromiseses).then(() => existingUsernames);
             else return existingUsernames;
         })
+        // .then((x) => console.log(x) || x)        
         .then(existingUsernames => accountRows.filter(account => !existingUsernames.includes(account.username)))
+        // .then((x) => console.log(x) || x)        
         .then(accountsToCreate => sequelize.models.User.bulkCreate(accountsToCreate))
+        // .then((x) => console.log(x) || x)        
         .then(createdAccounts => {
-            if (!createdAccounts || createAccounts.length === 0) return;
+            if (!createdAccounts || createdAccounts.length < 1) return;
             console.log('Newly created accounts from config:')
             console.table(createdAccounts.map(acc => ({
                 USERNAME: acc.username,

@@ -6,6 +6,8 @@ module.exports = (sequelize, datatypes) => {
             primaryKey: true
         },
         registrationDate: datatypes.DATE
+    }, {
+        timestamps: false,
     });
 
     Client.associate = (models) => {

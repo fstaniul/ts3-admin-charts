@@ -1,0 +1,11 @@
+.clickable-oi {
+    cursor: pointer;
+    &::before {
+        font-weight: bold;
+        font-size: 18px;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}

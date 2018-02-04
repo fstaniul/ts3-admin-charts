@@ -125,7 +125,6 @@ export class GraphsComponent implements OnInit, OnDestroy {
       this.lastData = data;
       this.refreshGraph(data);
     };
-    const error = err => console.log(err);
 
     const requestData = {
       from: this.dataSelectionForm.controls.from.value,
@@ -140,7 +139,7 @@ export class GraphsComponent implements OnInit, OnDestroy {
     };
 
     this.api.getReg(requestData)
-      .subscribe(success, error);
+      .subscribe(success);
   }
 
   getColor(index) {
@@ -164,7 +163,7 @@ export class GraphsComponent implements OnInit, OnDestroy {
       borderColor: this.getColor(index)[0],
       pointBackgroundColor: this.getColor(index)[0],
       borderWidth: 2,
-      pointRadius: 5,
+      pointRadius: 3,
     }, {
         label: info.label,
         data: info.count,

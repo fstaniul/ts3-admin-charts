@@ -62,3 +62,8 @@ sqlite3.db
 
 # Do not send to git private and public key pairs!
 *.pem
+
+# Ignore public folder with compiled frontand and static files.
+public/
+
+src/config.json

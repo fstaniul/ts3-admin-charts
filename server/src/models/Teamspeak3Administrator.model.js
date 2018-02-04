@@ -6,6 +6,8 @@ module.exports = exports = (sequelize, datatypes) => {
             allowNull: false
         },
         nickname: datatypes.STRING,
+    }, {
+        timestamps: false,
     });
 
     return Teamspeak3Administrator;

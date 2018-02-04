@@ -1,3 +1,42 @@
-<p>
-  admin works!
-</p>
+<app-back-link link="graph"></app-back-link>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nazwa użytkownika</th>
+      <th>Accepted / Accept / Delete</th>
+      <th>Administrator / User (toggle)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.username}}</td>
+      <td>
+        <ng-template [ngIf]="user.accepted">
+          <span class="text-success">
+            <span class="oi oi-check"></span> Accepted
+          </span>
+        </ng-template>
+        <ng-template [ngIf]="!user.accepted">
+          <span class="text-success">
+            <span class="oi oi-circle-check clickable-oi" (click)="updateState(user, true)"></span> Zaakceptuj
+          </span>
+          <span class="text-danger">
+            <span class="oi oi-circle-x text-danger clickable-oi" (click)="updateState(user, false)"></span> Usuń
+          </span>
+        </ng-template>
+      </td>
+      <td>
+        <span (click)="toggleAdministratorState(user)" class="clickable">
+          <ng-template [ngIf]="user.administrator">
+            <span class="oi oi-terminal clickable-oi"></span>
+            Administrator
+          </ng-template>
+          <ng-template [ngIf]="!user.administrator">
+            <span class="oi oi-person clickable-oi"></span>
+            Użytkownik
+          </ng-template>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -14,25 +14,24 @@ export class AuthService implements OnDestroy {
     this.subject = new BehaviorSubject<UserData>(undefined);
     const token = localStorage.getItem('token');
     if (token) {
-      const successHandler = data => {
-        this.loggedInUser = data.user;
-        this.subject.next(data);
-        localStorage.setItem('token', data.token);
-      };
-
-      const errorHandler = data => {
-        localStorage.removeItem('token');
-        this.loggedInUser = undefined;
-        this.subject.next(undefined);
-        this.router.navigate(['login']);
-      };
-
       this.apiService.validateToken(token)
-        .subscribe(successHandler, errorHandler);
+        .subscribe(
+        (data) => {
+          this.loggedInUser = data.user;
+          this.subject.next(data);
+          localStorage.removeItem('token');
+          localStorage.setItem('token', data.token);
+        }, (data) => {
+          localStorage.removeItem('token');
+          this.loggedInUser = undefined;
+          this.subject.next(undefined);
+          this.router.navigate(['login']);
+        });
     }
   }
 
   login(data: UserData) {
+    localStorage.removeItem('token');
     localStorage.setItem('token', data.token);
     this.loggedInUser = data.user;
     this.subject.next(data);

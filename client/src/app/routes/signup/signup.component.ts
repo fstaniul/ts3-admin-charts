@@ -55,7 +55,7 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    console.log(this.signupForm.value);
+    // console.log(this.signupForm.value);
 
     this.apiService.signup(this.signupForm.value)
       .subscribe(data => this.router.navigate(['login']), err => this.displayError = true);

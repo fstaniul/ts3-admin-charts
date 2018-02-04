@@ -8,7 +8,13 @@ export class JsonHttpInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (typeof request.body === 'object') {
-            request = request.clone({body: JSON.stringify(request.body)});
+            request = request.clone({
+                responseType: 'json',
+                body: JSON.stringify(request.body),
+                setHeaders: {
+                    'Content-Type': 'application/json',
+                    'Accept-Type': 'application/json'
+                }});
         }
 
         return next.handle(request);

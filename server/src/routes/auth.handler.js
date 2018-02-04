@@ -58,7 +58,7 @@ function verify(token) {
 exports.auth = (req, res) => {
     const { username, password } = req.body || {};
 
-    if (!username || !password) res.sendStatus(400);
+    if (!username || !password) { res.sendStatus(400) };
 
     sequelize.models.User.findOne({ where: { username } })
         .then(user => {
@@ -66,7 +66,7 @@ exports.auth = (req, res) => {
             else if (!user.verifyPassword(password) || !user.accepted) res.sendStatus(401);
             else {
                 sign(user)
-                    .then(token => res.json({token, status: 'success', error: 0}))
+                    .then(token => res.json({token, user: user.safe(), status: 'success', error: 0}))
             }
         })
 };
@@ -119,3 +119,6 @@ exports.signUp = (req, res) => {
             res.sendStatus(500);
         })
 }
+
+exports.getToken = sign;
+exports.verityToken = verify;
