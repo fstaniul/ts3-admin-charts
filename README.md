@@ -1,7 +1,7 @@
 # Teamspeak 3 Admin Charts
 Utility for teamspeak 3 server administrators to monitor administrators activity.
 
-# Planner features:
+# Planned features:
 - 1.0.x
   - [ ] Add option to delete accepted accounts.
   - [ ] Add option to refresh accounts list.
