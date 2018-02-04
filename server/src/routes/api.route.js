@@ -12,7 +12,6 @@ const router = express.Router();
 
 const teamspeak3 = require('../teamspeak3/teamspeak3instace');
 
-router.use(bodyParser.json());
 router.use(cookieParser());
 
 function parseDatestring(datestring) {
@@ -29,7 +28,8 @@ router.route('/users')
             .then(users => users.map(user => user.safe()))
             .then(users => res.json({ users, status: 'success', error: 0 }))
     })
-    .post((req, res) => {
+    .post(bodyParser.json(),
+        (req, res) => {
         const { username, password, passwordRepeat } = req.body;
 
         if (!username || !password || !passwordRepeat) res.sendStatus(400);
@@ -46,10 +46,14 @@ router.route('/users')
 
                     const io = __server.io;
                     io.emit('users-new', user.safe());
+
+                    sequelize.models.User.count({where: {accepted: false}})
+                        .then(count => io.emit('users-accepted', count));
                 }
             });
     })
-    .patch(authHandler.verify,
+    .patch(bodyParser.json(),
+        authHandler.verify,
     authHandler.isAdmin,
     (req, res) => {
         const { uuid, accepted, administrator } = req.body;
@@ -61,24 +65,31 @@ router.route('/users')
 
         sequelize.models.User.findOne({ where: { uuid: uuid } })
             .then(user => {
+                let emitAccepted = false;
                 if (typeof accepted != 'undefined') {
+                    if (user.accepted !== accepted) emitAccepted = true;
                     user.accepted = !!accepted;
                 }
                 if (typeof administrator != 'undefined') {
                     user.administrator = !!administrator;
                 }
 
+                if (emitAccepted) sequelize.models.User.count({where: {accepted: false}})
+                    .then(count => io.emit('users-accepted', count));
+
                 user.save().then(user => {
                     res.json(user.safe())
                     
                     const io = __server.io;
-                    io.emit('users-update', user.safe());
+                    io.emit('users-updated', user.safe());
                 });
             });
     });
 
 router.route('/users/:id')
-    .patch(authHandler.verify,
+    .patch(
+        bodyParser.json(),
+        authHandler.verify,
     (req, res) => {
         if (req.uuid !== req.params.id) {
             res.sendStatus(403);
@@ -102,14 +113,17 @@ router.route('/users/:id')
     .delete(authHandler.verify,
     authHandler.isAdmin,
     (req, res) => {
-        const { uuid } = req.params;
-        if (!uuid) res.sendStatus(400);
+        const { id } = req.params;
+        if (!id) res.sendStatus(400);
         else {
-            sequelize.models.User.destroy({ where: { uuid } })
+            sequelize.models.User.destroy({ where: { uuid: id } })
                 .then((count) => {
                     res.json({ deleted: count, success: count > 0 })
                     const io = __server.io;
-                    io.emit('users-deleted', {uuid: uuid});
+                    io.emit('users-deleted', {uuid: id});
+
+                    sequelize.models.User.count({where: {accepted: false}})
+                        .then(count => io.emit('users-accepted', count));
                 });
         }
     }
@@ -122,6 +136,11 @@ router.route('/ts3admins')
             .map(rawAdmin => ({ databaseId: rawAdmin.client_database_id, nickname: rawAdmin.client_nickname }));
         res.json({ administrators: admins })
     })
+
+router.get('/unaccepted-users', authHandler.verify, (req, res) => {
+    sequelize.models.User.count({where: {accepted: false}})
+        .then(count => res.json({count}));
+});
 
 router.route('/reg')
     .get(authHandler.verify,

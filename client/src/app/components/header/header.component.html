@@ -8,8 +8,11 @@
         <a routerLink="profile" class="profile-link">{{loggedInUser ? loggedInUser.username : '...'}}</a>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link admin-link" [ngClass]="{disabled: !loggedInUser?.administrator}" (click)="navigateToAdminPanel()">Panel Administratora</a>
+    <li class="nav-item" [@badgeAnimation]="unacceptedUsersCount">
+      <a class="nav-link admin-link" [ngClass]="{disabled: !loggedInUser?.administrator}" (click)="navigateToAdminPanel()">
+        Panel Administratora 
+        <span class="badge badge-pill unacceptedBadge" [ngClass]="badgeClass()">{{unacceptedUsersCount}}</span>
+      </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="/" (click)="callLogout()">Wyloguj</a>

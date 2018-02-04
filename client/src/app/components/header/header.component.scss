@@ -37,4 +37,9 @@ a.admin-link {
         color: #0056b3;
         cursor: pointer;
     }
+
+    &.disabled {
+        color: #818182;
+        cursor: default;
+    }
 }

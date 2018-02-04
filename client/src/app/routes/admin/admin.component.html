@@ -1,4 +1,10 @@
-<app-back-link link="graph"></app-back-link>
+<div class="left"><app-back-link link="graph"></app-back-link></div>
+<div class="right">
+  <button class="btn btn-light refresh-button" (click)="reloadData()">
+    <span class="oi oi-reload"></span>
+  </button>
+</div>
+<div class="clear"></div>
 <table class="table table-striped">
   <thead>
     <tr>

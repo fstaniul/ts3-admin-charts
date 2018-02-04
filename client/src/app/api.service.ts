@@ -182,12 +182,21 @@ export class ApiService implements OnDestroy {
   }
 
   deleteUser(user): Observable<SuccessMessage> {
-    return this.http.delete<SuccessMessage>(`/users/${user.uuid}`);
+    return this.http.delete<SuccessMessage>(`/api/users/${user.uuid}`);
   }
 
   changePassword(uuid: string, requestData: { password: string, passwordRepeat: string }): Observable<UserData> {
     return this.http.patch<UserData>(`/api/users/${uuid}`, requestData);
   }
+
+  getUnacceptedUsersCount(): Observable<UnacceptedUsersCountResponse> {
+    return this.http.get<UnacceptedUsersCountResponse>('/api/unaccepted-users');
+  }
+}
+
+
+export interface UnacceptedUsersCountResponse {
+  count: number;
 }
 
 export interface SuccessMessage {

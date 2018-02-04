@@ -5,7 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { ApiService } from './api.service';
 import { AuthService } from './services/auth.service';
 import { AuthHttpInterceptorProvider } from './services/http-interceptors/auth.interceptor';
 import { JsonHttpInterceptorProvider } from './services/http-interceptors/json.interceptor';
@@ -16,7 +19,6 @@ import { AdminComponent } from './routes/admin/admin.component';
 import { GraphsComponent } from './routes/graphs/graphs.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingComponent } from './components/loading/loading.component';
-import { ApiService } from './api.service';
 import { SignupComponent } from './routes/signup/signup.component';
 import { LoggedInAsAdminGuard } from './services/guards/logged-in-as-admin.guard';
 import { ProfileComponent } from './routes/profile/profile.component';
@@ -37,6 +39,8 @@ const appRoutes: Routes = [
   { path: '**', redirectTo: 'login' }
 ];
 
+const socketIoConfig: SocketIoConfig = { url: 'localhost:3000', options: {} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,10 +57,12 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(appRoutes),
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule.forRoot(),
+    SocketIoModule.forRoot(socketIoConfig),
   ],
   providers: [ApiService, AuthService, AuthHttpInterceptorProvider, JsonHttpInterceptorProvider, LoggedInGuard, LoggedInAsAdminGuard],
   bootstrap: [AppComponent]

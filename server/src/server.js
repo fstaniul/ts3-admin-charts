@@ -14,6 +14,8 @@ const Sequelize = require('sequelize'), Op = Sequelize.Op;
 const sqlite3 = require('sqlite3');
 
 const app = express(); exports.app = app;
+const http = require('http').Server(app); exports.http = http;
+const io = require('socket.io')(http); exports.io = io;
 const sequelize = require('./database'); exports.sequelize = sequelize;
 
 sequelize.InitializedPromise.then(() => {
@@ -52,16 +54,14 @@ function setupServer() {
     return new Promise((resolve, reject) => {
         const port = process.env.PORT || config.port || 3000;
 
-        const http = require('http')(app); exports.http = http;
-        const io = require('socket.io')(http); exports.io = io;
-
         setupSocketIO(io);
 
         http.listen(port, () => {
             console.log(`Server listening on port ${port}\n`);
             resolve();
         });
-    });
+    })
+    .catch(err => console.log(err) || process.exit());
 }
 
 
@@ -79,6 +79,7 @@ function timeAsString() {
 
 function setupSocketIO(io) {
     io.on('connection', (socket) => {
+        console.log('user connected!');
         socket.on('disconnect', () => console.log('user disconnected!'));
     });
 }
