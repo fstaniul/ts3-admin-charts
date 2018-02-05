@@ -80,13 +80,12 @@ export class SignupComponent implements OnInit {
         this.alert.changed = true;
         this.alert.error = false;
         this.alert.heading = 'Udało się!';
-        this.alert.message = `Twoje konto zostało utworzone. Teraz musisz tylko poczekać, aż administrator je zaakceptuje!`;
         this.alert.display = true;
         this.signupForm.disable();
       }, err => {
         console.log(err);
         this.alert.changed = true;
-        this.alert.error = true;
+        this.alert.error = err.status;
         this.alert.heading = 'Ups! Coś poszło nie tak...';
         if (err.status === 409) {
           this.alert.message = 'Nie udało się utworzyć twojego konta ponieważ podany przez ciebie login jest już zajęty! ' +

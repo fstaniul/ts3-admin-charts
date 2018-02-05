@@ -5,7 +5,9 @@
         <span aria-hidden="true">&times;</span>
       </button>
       <h4 class="alert-heading">{{alert.heading}}</h4>
-      <p>{{alert.message}}</p>
+      <p *ngIf="alert.error === 409">Nie udało się utworzyć twojego konta ponieważ podany przez ciebie login jest już zajęty! Proszę wybierz inny login i spróbuj ponownie!</p>
+      <p *ngIf="alert.error && alert.error !== 409">No nie złe chochliki znowu przegryzły kable na serwerze! A niech to! Niestety twoje konto nie może zostać utworzone w tym momencie :( Proszę spróbuj później.</p>
+      <p *ngIf="!alert.error">Twoje konto zostało utworzone! Teraz musisz tylko poczekać, aż administrator je zaakceptuje, a następnie przejść do <a routerLink="/login" class="alert-link">strony logowania</a>, aby się zalogować.</p>
     </div>
     <h2 class="text-primary special-font text-center">Zarejestruj się!</h2>
     <hr>
