@@ -1,4 +1,4 @@
-# Teamspeak 3 Admin Charts
+# Teamspeak 3 Admin Charts 1.1.0
 Utility for teamspeak 3 server administrators to monitor administrators activity.
 
 # Planned features:
@@ -15,6 +15,7 @@ Utility for teamspeak 3 server administrators to monitor administrators activity
 
 - 1.1.x
   - [ ] Display count for administrator from the begining.
+
 # Bugs:
 - [x] Deletion of unaccepted users pointed to right end point and fixed server error. (04.02.2018) -> (05.02.2018) *v1.1|*
 - [x] Informations about signup status. (04.02.2018) -> (05.02.2018) *v1.1*
