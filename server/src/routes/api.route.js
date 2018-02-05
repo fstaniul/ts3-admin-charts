@@ -14,8 +14,11 @@ const teamspeak3 = require('../teamspeak3/teamspeak3instace');
 
 router.use(cookieParser());
 
-function parseDatestring(datestring) {
-    return /^\d{4}-\d{2}-\d{2}$/.test(datestring) ? new Date(`${datestring}T00:00:00.000+01:00`) : null;
+function parseDatestring(datestring, timestring) {
+    timestring = timestring || "00:00:00.000";
+    const rstime = /^(\d{2}:\d{2}:\d{2})(\.\d{3})?$/.exec(timestring);
+    const time = rstime[1] || "00:00:00", millis = rstime[2] || '.000';
+    return /^\d{4}-\d{2}-\d{2}$/.test(datestring) ? new Date(`${datestring}T${time}${millis}+01:00`) : null;
 }
 
 const __server = require('../server');
@@ -154,7 +157,7 @@ router.route('/reg')
         }
 
         from = parseDatestring(from);
-        to = parseDatestring(to);
+        to = parseDatestring(to, '23:59:59.999');
 
         if (!from || !to) {
             res.sendStatus(400);
@@ -206,9 +209,11 @@ router.route('/reg')
                         data: []
                     };
 
+                    const addZero = (v) => (v < 10 ? '0' : '') + v;
+
                     const oneDay = 86400000;
-                    for (let time = new Date(from.getTime() + 7200000); time < to; time = new Date(time.getTime() + oneDay)) {
-                        response.labels.push(/^(\d{4}-\d{2}-\d{2})/.exec(time.toISOString())[1]);
+                    for (let time = from; time < to; time = new Date(time.getTime() + oneDay)) {
+                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth())}-${time.getDay()}`);
                     }
 
                     for (let admin of teamspeak3Administrators) {
