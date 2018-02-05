@@ -5,7 +5,7 @@ const config = require('./config.json');
 const sequelize = new Sequelize({
     database: 'ts3_admin_charts',
     dialect: 'sqlite',
-    storage: path.join(__dirname, 'sqlite3.db'),
+    storage: path.join(__dirname, '..', 'sqlite3.db'),
     operatorsAliases: false,
     logging: initSequelizeLogging()
 });
