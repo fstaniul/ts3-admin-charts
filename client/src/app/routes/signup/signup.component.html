@@ -1,5 +1,12 @@
 <div class="signup-container">
   <form class="signup-form border" [formGroup]="signupForm" novalidate (ngSubmit)="onSubmit()">
+    <div class="alert response-alert" [ngClass]="alert.classes()" role="alert" [@alert-animation]="alert.display">
+      <button type="button" class="close" aria-label="Close" (click)="alert.close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="alert-heading">{{alert.heading}}</h4>
+      <p>{{alert.message}}</p>
+    </div>
     <h2 class="text-primary special-font text-center">Zarejestruj się!</h2>
     <hr>
     <div class="form-group">
@@ -10,7 +17,7 @@
           </span>
         </div>
         <input type="text" class="form-control" placeholder="login" formControlName="username" [ngClass]="setClasses('username')">
-        <div class="invalid-feedback">
+        <div class="invalid-feedback" *ngIf="shouldShowError('username')">
           Musisz podać login!
         </div>
       </div>

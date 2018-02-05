@@ -38,7 +38,7 @@ router.route('/users')
         sequelize.models.User.findOrCreate({ where: { username }, defaults: { username, password } })
             .spread((user, created) => {
                 if (!created) {
-                    res.sendStatus(300);
+                    res.sendStatus(409);
                     return;
                 }
                 else {
