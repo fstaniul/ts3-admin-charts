@@ -13,10 +13,10 @@ const express = require('express');
 const Sequelize = require('sequelize'), Op = Sequelize.Op;
 const sqlite3 = require('sqlite3');
 
-const app = express(); exports.app = app;
-const http = require('http').Server(app); exports.http = http;
-const io = require('socket.io')(http); exports.io = io;
-const sequelize = require('./database'); exports.sequelize = sequelize;
+const app = exports.app = express();
+const http = exports.http = require('http').Server(app);
+const io = exports.io = require('socket.io')(http);
+const sequelize = exports.sequelize = require('./database');
 
 sequelize.InitializedPromise.then(() => {
         const apiRouter = require('./routes/api.route');
@@ -78,5 +78,5 @@ function timeAsString() {
 }
 
 function setupSocketIO(io) {
-    
+
 }
