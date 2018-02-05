@@ -69,22 +69,22 @@ router.route('/users')
         sequelize.models.User.findOne({ where: { uuid: uuid } })
             .then(user => {
                 let emitAccepted = false;
-                if (typeof accepted != 'undefined') {
+                if (typeof accepted !== 'undefined') {
+                    console.log(accepted, user.accepted);
                     if (user.accepted !== accepted) emitAccepted = true;
                     user.accepted = !!accepted;
                 }
-                if (typeof administrator != 'undefined') {
+                if (typeof administrator !== 'undefined') {
                     user.administrator = !!administrator;
                 }
-
-                if (emitAccepted) sequelize.models.User.count({where: {accepted: false}})
-                    .then(count => io.emit('users-accepted', count));
 
                 user.save().then(user => {
                     res.json(user.safe())
                     
                     const io = __server.io;
                     io.emit('users-updated', user.safe());
+                    if (emitAccepted) sequelize.models.User.count({where: {accepted: false}})
+                        .then(count => io.emit('users-accepted', count));
                 });
             });
     });

@@ -1,17 +1,18 @@
 <header class="border-bottom header-container">
   <a routerLink="graphs" class="logo-link d-none d-md-block">
-    <img class="logo" src="/assets/logo.png" alt="electronicsports.pl logo" />
+    <img class="logo" src="/assets/logo.png" alt="Electronicsports.pl Logo" />
   </a>
   <ul class="nav justify-content-end">
     <li class="nav-item">
-      <a class="nav-link">Zalogowany jako
+      <a class="nav-link">
+        Zalogowany jako
         <a routerLink="profile" class="profile-link">{{loggedInUser ? loggedInUser.username : '...'}}</a>
       </a>
     </li>
-    <li class="nav-item" [@badgeAnimation]="unacceptedUsersCount">
+    <li class="nav-item">
       <a class="nav-link admin-link" [ngClass]="{disabled: !loggedInUser?.administrator}" (click)="navigateToAdminPanel()">
         Panel Administratora 
-        <span class="badge badge-pill unacceptedBadge" [ngClass]="badgeClass()" *ngIf="loggedInUser?.administrator">{{unacceptedUsersCount}}</span>
+        <span class="badge badge-pill unacceptedBadge" [ngClass]="badgeClass()" *ngIf="loggedInUser && loggedInUser.administrator" [@badgeAnimation]="unacceptedUsersCount">{{unacceptedUsersCount}}</span>
       </a>
     </li>
     <li class="nav-item">

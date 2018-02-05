@@ -4,7 +4,7 @@
     <a routerLink="/signup">zarejestruj się</a> !
   </div>
   <form (ngSubmit)="onSubmit()" class="login-form border" [formGroup]="loginForm" novalidate>
-    <div class="alert alert-danger" role="alert" [@alert-animation]="alert.display">
+    <div class="alert alert-danger" role="alert" [@alert-animation]="alert.display" *ngIf="alert.changed">
       <button type="button" class="close" aria-label="Close" (click)="alert.close()">
         <span aria-hidden="true">&times;</span>
       </button>

@@ -32,6 +32,7 @@ export class SignupComponent implements OnInit {
       error: false,
       classes: (() => this.alert.error ? 'alert-danger' : 'alert-success').bind(this),
       close: (() => this.alert.display = false).bind(this),
+      changed: false,
     };
 
     this.signupForm = this.formBuilder.group({
@@ -76,6 +77,7 @@ export class SignupComponent implements OnInit {
 
     this.apiService.signup(this.signupForm.value)
       .subscribe(data => {
+        this.alert.changed = true;
         this.alert.error = false;
         this.alert.heading = 'Udało się!';
         this.alert.message = `Twoje konto zostało utworzone. Teraz musisz tylko poczekać, aż administrator je zaakceptuje!`;
@@ -83,6 +85,7 @@ export class SignupComponent implements OnInit {
         this.signupForm.disable();
       }, err => {
         console.log(err);
+        this.alert.changed = true;
         this.alert.error = true;
         this.alert.heading = 'Ups! Coś poszło nie tak...';
         if (err.status === 409) {
@@ -108,4 +111,5 @@ interface SignupAlert {
   error: boolean;
   classes: () => string;
   close: () => void;
+  changed: boolean;
 }

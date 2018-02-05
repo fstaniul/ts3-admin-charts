@@ -10,7 +10,7 @@ import { style, trigger, keyframes, query, transition, animate } from '@angular/
 
 const badgeAnimation = trigger('badgeAnimation', [
   transition(':increment', [
-    query('.unacceptedBadge', animate('1s ease-out', keyframes([
+    animate('1s ease-out', keyframes([
       style({transform: 'translateY(0)', offset: 0}),
       style({transform: 'translateY(-15px)', offset: .01}),
       style({transform: 'translateY(0)', offset: .2}),
@@ -24,7 +24,7 @@ const badgeAnimation = trigger('badgeAnimation', [
       style({transform: 'translateY(0)', offset: .96}),
       style({transform: 'translateY(-1px)', offset: .99}),
       style({transform: 'translateY(0)', offset: 1}),
-    ])))
+    ]))
   ])
 ]);
 

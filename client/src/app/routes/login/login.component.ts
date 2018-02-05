@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
     this.alert = {
       display: false,
       close: (() => this.alert.display = false).bind(this),
+      changed: false,
     };
   }
 
@@ -72,6 +73,7 @@ export class LoginComponent implements OnInit {
 
     const errorHandler = ((err) => {
       allwaysHandler();
+      this.alert.changed = true;
       this.alert.display = true;
     }).bind(this);
 
