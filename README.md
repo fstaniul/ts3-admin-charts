@@ -13,6 +13,11 @@ Utility for teamspeak 3 server administrators to monitor administrators activity
   - [x] Add indicator with count of not activated accounts next to admin panel link
   - [x] Add option to refresh accounts list.
 
+- 1.1.1
+  - [x] Fixed numeroues bugs.
+  - [x] Changed /api/reg dates to include to date in the data set: [from, to) -> [from, to]
+  - [x] Fixed errors with badge animations and hide the animation of alerts on login and signup.
+
 - 1.1.x
   - [ ] Display count for administrator from the begining.
 
