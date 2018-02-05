@@ -11,7 +11,7 @@
     <li class="nav-item" [@badgeAnimation]="unacceptedUsersCount">
       <a class="nav-link admin-link" [ngClass]="{disabled: !loggedInUser?.administrator}" (click)="navigateToAdminPanel()">
         Panel Administratora 
-        <span class="badge badge-pill unacceptedBadge" [ngClass]="badgeClass()">{{unacceptedUsersCount}}</span>
+        <span class="badge badge-pill unacceptedBadge" [ngClass]="badgeClass()" *ngIf="loggedInUser?.administrator">{{unacceptedUsersCount}}</span>
       </a>
     </li>
     <li class="nav-item">

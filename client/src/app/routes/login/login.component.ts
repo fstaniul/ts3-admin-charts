@@ -5,26 +5,39 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
-
 import { Token, User, AuthService } from './../../services/auth.service';
 import { Observable } from 'rxjs/Observable';
+import { trigger, transition, query, state, animate, style } from '@angular/animations';
+
+
+const alertAnimate = trigger('alert-animation', [
+  state('true', style({ opacity: 1, height: '*', padding: '*', margin: '*'})),
+  state('false', style({ opacity: 0, height: '0', padding: '0', margin: '0'})),
+  transition('* => *', animate('400ms ease-in-out'))
+]);
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [alertAnimate]
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   processing = false;
-  showErrorAlert = false;
+  alert: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    this.alert = {
+      display: false,
+      close: (() => this.alert.display = false).bind(this),
+    };
+  }
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -44,7 +57,6 @@ export class LoginComponent implements OnInit {
 
     this.loginForm.disable();
     this.processing = true;
-    this.closeErrorAlert();
 
     const allwaysHandler = (() => {
       this.processing = false;
@@ -60,7 +72,7 @@ export class LoginComponent implements OnInit {
 
     const errorHandler = ((err) => {
       allwaysHandler();
-      this.showErrorAlert = true;
+      this.alert.display = true;
     }).bind(this);
 
     this.apiService.postAuth(this.loginForm.value)
@@ -70,10 +82,6 @@ export class LoginComponent implements OnInit {
   shouldShowError(controlName: string): boolean {
     const control = this.loginForm.controls[controlName];
     return control.invalid && (control.touched || control.dirty);
-  }
-
-  closeErrorAlert(): void {
-    this.showErrorAlert = false;
   }
 }
 

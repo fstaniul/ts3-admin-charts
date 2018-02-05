@@ -1,5 +1,5 @@
 <div class="signup-container">
-  <form class="signup-form border" [formGroup]="signupForm" novalidate (ngSubmit)="onSubmit()">
+  <form class="signup-form border" [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
     <div class="alert response-alert" [ngClass]="alert.classes()" role="alert" [@alert-animation]="alert.display">
       <button type="button" class="close" aria-label="Close" (click)="alert.close()">
         <span aria-hidden="true">&times;</span>

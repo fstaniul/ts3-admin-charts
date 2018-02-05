@@ -80,6 +80,7 @@ export class SignupComponent implements OnInit {
         this.alert.heading = 'Udało się!';
         this.alert.message = `Twoje konto zostało utworzone. Teraz musisz tylko poczekać, aż administrator je zaakceptuje!`;
         this.alert.display = true;
+        this.signupForm.disable();
       }, err => {
         console.log(err);
         this.alert.error = true;

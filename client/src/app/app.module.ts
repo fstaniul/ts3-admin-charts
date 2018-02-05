@@ -39,7 +39,7 @@ const appRoutes: Routes = [
   { path: '**', redirectTo: 'login' }
 ];
 
-const socketIoConfig: SocketIoConfig = { url: 'localhost:3000', options: {} };
+const socketIoConfig: SocketIoConfig = { url: '', options: {} };
 
 @NgModule({
   declarations: [

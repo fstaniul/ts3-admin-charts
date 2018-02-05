@@ -1,43 +1,51 @@
 <div class="login-background">
-    <div class="login-signup-text d-none d-sm-block">
-        Jeżeli nie masz jeszcz konta to
-        <a routerLink="/signup">zarejestruj się</a> !
+  <div class="login-signup-text d-none d-sm-block">
+    Jeżeli nie masz jeszcz konta to
+    <a routerLink="/signup">zarejestruj się</a> !
+  </div>
+  <form (ngSubmit)="onSubmit()" class="login-form border" [formGroup]="loginForm" novalidate>
+    <div class="alert alert-danger" role="alert" [@alert-animation]="alert.display">
+      <button type="button" class="close" aria-label="Close" (click)="alert.close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="alert-heading">O nie...</h4>
+      <p>Podane przez Ciebie hasło lub login nie pasują do siebie! Sprawdź czy podane hasło jest prawidłowe.</p>
+      <hr>
+      <p>Możliwe, że twoje konto nie zostało zaakceptowane przez administratora. Skontaktuj się z administratorem i poczekaj do momentu jego aktywacji.</p>
     </div>
-    <form (ngSubmit)="onSubmit()" class="login-form border" [formGroup]="loginForm" novalidate>
-        <h2 class="text-center text-primary special-font">Logowanie</h2>
-        <hr />
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <span class="oi oi-person"></span>
-                    </span>
-                </div>
-                <input class="form-control" type="text" placeholder="login" formControlName="username" [ngClass]="{'is-invalid': loginForm.controls.username.invalid && (loginForm.controls.username.touched || loginForm.controls.username.dirty), 'is-valid': loginForm.controls.username.valid}">
-                <div class="invalid-feedback" *ngIf="shouldShowError('username')">Musisz podać login.</div>
-            </div>
+    <h2 class="text-center text-primary special-font">Logowanie</h2>
+    <hr />
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <span class="oi oi-person"></span>
+          </span>
         </div>
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <span class="oi oi-key"></span>
-                    </span>
-                </div>
-                <input class="form-control" type="password" placeholder="hasło" formControlName="password" [ngClass]="{'is-invalid': loginForm.controls.password.invalid && (loginForm.controls.password.touched || loginForm.controls.password.dirty), 'is-valid': loginForm.controls.password.valid}">
-                <div class="invalid-feedback" *ngIf="shouldShowError('password')">Musisz podać hasło.</div>
-            </div>
+        <input class="form-control" type="text" placeholder="login" formControlName="username" [ngClass]="{'is-invalid': loginForm.controls.username.invalid && (loginForm.controls.username.touched || loginForm.controls.username.dirty), 'is-valid': loginForm.controls.username.valid}">
+        <div class="invalid-feedback" *ngIf="shouldShowError('username')">Musisz podać login.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <span class="oi oi-key"></span>
+          </span>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">
-            <ng-template [ngIf]="!processing">
-                <span class="oi oi-account-login"></span>
-                Zaloguj
-            </ng-template>
-            <ng-template [ngIf]="processing">
-                <i class="icon icon-spin6 animate-spin"></i>
-            </ng-template>
-        </button>
-        <a routerLink="/signup" class="btn btn-outline-secondary btn-block d-block d-sm-none">Zarejestruj się</a>
-        <ngb-alert *ngIf="showErrorAlert" type='danger' (close)="closeErrorAlert()">Podane hasło jest niepoprawne lub konto nie zostało aktywowane.</ngb-alert>
-    </form>
+        <input class="form-control" type="password" placeholder="hasło" formControlName="password" [ngClass]="{'is-invalid': loginForm.controls.password.invalid && (loginForm.controls.password.touched || loginForm.controls.password.dirty), 'is-valid': loginForm.controls.password.valid}">
+        <div class="invalid-feedback" *ngIf="shouldShowError('password')">Musisz podać hasło.</div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">
+      <ng-template [ngIf]="!processing">
+        <span class="oi oi-account-login"></span>
+        Zaloguj
+      </ng-template>
+      <ng-template [ngIf]="processing">
+        <i class="icon icon-spin6 animate-spin"></i>
+      </ng-template>
+    </button>
+    <a routerLink="/signup" class="btn btn-outline-secondary btn-block d-block d-sm-none">Zarejestruj się</a>
+  </form>
 </div>
