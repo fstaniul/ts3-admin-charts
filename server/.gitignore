@@ -66,4 +66,4 @@ sqlite3.db
 # Ignore public folder with compiled frontand and static files.
 public/
 
-src/config.json
+config.json

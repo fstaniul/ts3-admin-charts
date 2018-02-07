@@ -1,4 +1,4 @@
-const config = require('../config.json');
+const config = require('../../config.json');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -157,7 +157,7 @@ router.route('/reg')
         }
 
         from = parseDatestring(from);
-        to = parseDatestring(to, '23:59:59.999');
+        to = parseDatestring(to);
 
         if (!from || !to) {
             res.sendStatus(400);
@@ -166,10 +166,15 @@ router.route('/reg')
 
         //If from is after to change them
         if (from > to) {
-            let temp = to;
-            to = from;
-            from = temp;
+            const temp = from;
+            from = to;
+            to = temp;
         }
+
+        to.setHours(23, 59, 59, 999);
+
+        // console.log('From date: ', from.toISOString());
+        // console.log('To date: ', to.toISOString());
 
         sequelize.models.Teamspeak3Administrator.findAll({ where: { databaseId: ids } })
             .then(teamspeak3Administrators =>
@@ -211,9 +216,8 @@ router.route('/reg')
 
                     const addZero = (v) => (v < 10 ? '0' : '') + v;
 
-                    const oneDay = 86400000;
-                    for (let time = from; time < to; time = new Date(time.getTime() + oneDay)) {
-                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth() + 1)}-${time.getDay()}`);
+                    for (let time = from; time < to; time = new Date(time.getFullYear(), time.getMonth() - 1, time.getDate() + 1)) {
+                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth())}-${addZero(time.getDate())}`);
                     }
 
                     for (let admin of teamspeak3Administrators) {
@@ -223,7 +227,7 @@ router.route('/reg')
                         };
 
                         response.labels.forEach(date => {
-                            const count = rebuildData[admin.databaseId] && rebuildData[admin.databaseId].dates && rebuildData[admin.databaseId].dates[date] || 0;
+                            const count = (rebuildData[admin.databaseId] && rebuildData[admin.databaseId].dates && rebuildData[admin.databaseId].dates[date]) || 0;
                             adminData.count.push(count);
                         });
 
@@ -233,6 +237,8 @@ router.route('/reg')
                     // console.log(response);
 
                     res.json(response);
+                    // console.log('Response: ');
+                    // console.dir(response)
                 })
             );
     })

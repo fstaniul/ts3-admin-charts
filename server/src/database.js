@@ -1,6 +1,6 @@
 const fs = require('fs'), path = require('path');
 const Sequelize = require('sequelize');
-const config = require('./config.json');
+const config = require('../config.json');
 
 const sequelize = new Sequelize({
     database: 'ts3_admin_charts',

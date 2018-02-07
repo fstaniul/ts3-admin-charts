@@ -6,7 +6,7 @@ const path = require('path');
 
 const bodyParser = require('body-parser');
 
-const config = require('./config.json');
+const config = require('../config.json');
 const logReader = require('./teamspeak3/log-reader');
 
 const express = require('express');
