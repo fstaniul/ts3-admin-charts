@@ -216,8 +216,9 @@ router.route('/reg')
 
                     const addZero = (v) => (v < 10 ? '0' : '') + v;
 
-                    for (let time = from; time < to; time = new Date(time.getFullYear(), time.getMonth() - 1, time.getDate() + 1)) {
-                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth())}-${addZero(time.getDate())}`);
+                    const ONE_DAY_IN_MILLIS = 86400000;
+                    for (let time = from; time < to; time = new Date(time.getTime() + ONE_DAY_IN_MILLIS)) {
+                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth() + 1)}-${addZero(time.getDate())}`);
                     }
 
                     for (let admin of teamspeak3Administrators) {
