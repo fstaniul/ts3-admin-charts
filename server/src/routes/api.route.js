@@ -213,7 +213,7 @@ router.route('/reg')
 
                     const oneDay = 86400000;
                     for (let time = from; time < to; time = new Date(time.getTime() + oneDay)) {
-                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth())}-${time.getDay()}`);
+                        response.labels.push(`${addZero(time.getFullYear())}-${addZero(time.getMonth() + 1)}-${time.getDay()}`);
                     }
 
                     for (let admin of teamspeak3Administrators) {
